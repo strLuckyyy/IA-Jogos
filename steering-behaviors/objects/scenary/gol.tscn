@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://bai6yooaaslv1"]
+
+[ext_resource type="Texture2D" uid="uid://vlikjm1insvh" path="res://assets/go.png" id="1_rxyyv"]
+[ext_resource type="Script" uid="uid://cbk36t786ytg7" path="res://objects/scenary/gol_trave_trigger.gd" id="2_aey30"]
+[ext_resource type="Script" uid="uid://wiai1elvvcea" path="res://objects/scenary/gol_rede_trigger.gd" id="3_8ovsp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_aey30"]
+size = Vector2(48, 144)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8ovsp"]
+size = Vector2(53, 12)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7otfa"]
+size = Vector2(44, 126)
+
+[node name="Gol" type="StaticBody2D" unique_id=76015286]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=891547598]
+scale = Vector2(3, 3)
+texture = ExtResource("1_rxyyv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1139165290]
+position = Vector2(6, 0)
+shape = SubResource("RectangleShape2D_aey30")
+debug_color = Color(0, 0.5185447, 0.6078256, 0.41960785)
+
+[node name="Trava-Trigger" type="Area2D" parent="." unique_id=971962733]
+position = Vector2(0.5, 0)
+script = ExtResource("2_aey30")
+
+[node name="TravaE" type="CollisionShape2D" parent="Trava-Trigger" unique_id=2104243380]
+position = Vector2(-7, -69)
+shape = SubResource("RectangleShape2D_8ovsp")
+debug_color = Color(0.9740197, 0, 0.43322423, 0.41960785)
+
+[node name="TravaD" type="CollisionShape2D" parent="Trava-Trigger" unique_id=34924949]
+position = Vector2(-6.5, 69)
+shape = SubResource("RectangleShape2D_8ovsp")
+debug_color = Color(0.9740197, 0, 0.43322423, 0.41960785)
+
+[node name="Rede-Trigger" type="Area2D" parent="." unique_id=832202206]
+script = ExtResource("3_8ovsp")
+
+[node name="Rede" type="CollisionShape2D" parent="Rede-Trigger" unique_id=47960991]
+shape = SubResource("RectangleShape2D_7otfa")
+debug_color = Color(0.7929197, 0.42995057, 7.70092e-07, 0.41960785)
+
+[connection signal="body_entered" from="Trava-Trigger" to="Trava-Trigger" method="_on_body_entered"]
+[connection signal="body_entered" from="Rede-Trigger" to="Rede-Trigger" method="_on_body_entered"]
