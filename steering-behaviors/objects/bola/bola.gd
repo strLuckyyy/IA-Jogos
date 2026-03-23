@@ -2,8 +2,12 @@ extends RigidBody2D
 
 class_name Bola
 
+@onready var animation: AnimationPlayer = $AnimationPlayer
 var player_on_posses: Player = null
 var last_player_on_posses: Player = null
+
+var current_vel: int
+
 var original_layer: int
 var original_mask: int
 
@@ -14,9 +18,21 @@ func _ready() -> void:
 	original_layer = collision_layer
 	original_mask = collision_mask
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
+	current_vel = linear_velocity.length()
+	
+	if player_on_posses:
+		current_vel = player_on_posses.velocity.length()
+	
+	if current_vel > 10.0: 
+		animation.play("ball/roll")
+		animation.speed_scale = current_vel / (500 if player_on_posses else 100)
+	else:
+		animation.stop()
+	
 	if player_on_posses:
 		global_position = player_on_posses.get_node("FootPoint").global_position
+		animation.speed_scale = linear_velocity.length() / 500
 
 func capture_ball(new_own: Player):
 	player_on_posses = new_own
@@ -28,11 +44,16 @@ func capture_ball(new_own: Player):
 	collision_mask = 0
 
 func release_ball():
+	if player_on_posses == null: return
+	
 	player_on_posses.set_is_ball(null, false)
 	last_player_on_posses = player_on_posses
 	player_on_posses = null
 	
 	set_deferred("freeze", false)
+	
+	linear_velocity = Vector2.ZERO
+	angular_velocity = 0
 	
 	collision_layer = original_layer
 	collision_mask = original_mask

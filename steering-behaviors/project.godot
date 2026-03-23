@@ -41,6 +41,16 @@ chute={
 ]
 }
 
+[layer_names]
+
+2d_render/layer_1="1"
+2d_render/layer_2="2"
+2d_physics/layer_1="jogador"
+2d_navigation/layer_1="1"
+2d_physics/layer_2="ball"
+2d_navigation/layer_2="2"
+2d_physics/layer_3="scenary"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

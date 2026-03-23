@@ -94,7 +94,7 @@ size = Vector2(76.25, 848)
 [node name="partida-futebol" type="Node2D" unique_id=2012456315 node_paths=PackedStringArray("camera", "bola", "right_goal", "left_goal", "Referee")]
 position = Vector2(1, 2)
 script = ExtResource("1_gymso")
-camera = NodePath("Player/Camera2D")
+camera = NodePath("Bola/Camera2D")
 bola = NodePath("Bola")
 right_goal = NodePath("Gol-D")
 left_goal = NodePath("Gol-E")
@@ -110,22 +110,25 @@ tile_map_data = PackedByteArray("AAAQAAYAAwAAAAAAAAAQAAIAAAAAAAAAAAAQAAQABQAAAAA
 tile_set = SubResource("TileSet_4kdnl")
 
 [node name="Gol-D" parent="." unique_id=76015286 instance=ExtResource("9_dtj1e")]
+top_level = true
+visibility_layer = 2
 position = Vector2(1951, 414)
 
 [node name="Gol-E" parent="." unique_id=781018615 instance=ExtResource("9_dtj1e")]
+top_level = true
 position = Vector2(95, 414)
 rotation = 3.1415927
 
 [node name="Player" parent="." unique_id=370958645 instance=ExtResource("13_585br")]
-position = Vector2(1807, 438)
-
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=830790895]
+position = Vector2(981, 377)
 
 [node name="Bola" parent="." unique_id=1513123666 instance=ExtResource("10_m460p")]
-position = Vector2(1856, 456)
+position = Vector2(1026, 416)
+
+[node name="Camera2D" type="Camera2D" parent="Bola" unique_id=830790895]
 
 [node name="Árbito" parent="." unique_id=1110396913 instance=ExtResource("11_gymso")]
-position = Vector2(1888, 408)
+position = Vector2(1026, 320)
 
 [node name="LimitesTerreno" type="StaticBody2D" parent="." unique_id=1306219678]
 visible = false
