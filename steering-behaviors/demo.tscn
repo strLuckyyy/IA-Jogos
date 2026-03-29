@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://d4ihmodkybipr"]
+
+[ext_resource type="PackedScene" uid="uid://cnc11plwnopkk" path="res://scene/player.tscn" id="1_0bhed"]
+[ext_resource type="Script" uid="uid://cdbrncv7gq4p2" path="res://scripts/game_manager.gd" id="1_m0rpm"]
+[ext_resource type="PackedScene" uid="uid://dnrwy5fn2y33c" path="res://scene/agent.tscn" id="2_m0rpm"]
+[ext_resource type="PackedScene" uid="uid://nj034twkgieb" path="res://scene/agent_spawner.tscn" id="3_m0rpm"]
+
+[node name="Node2D" type="Node2D" unique_id=2043506140]
+script = ExtResource("1_m0rpm")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1357954966]
+
+[node name="Player" parent="." unique_id=913969696 instance=ExtResource("1_0bhed")]
+position = Vector2(-27, 0)
+
+[node name="AgentSpawner" parent="." unique_id=1255350816 instance=ExtResource("3_m0rpm")]
+position = Vector2(-188, -79)
+agent_scene = ExtResource("2_m0rpm")

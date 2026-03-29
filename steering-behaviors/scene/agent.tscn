@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://dnrwy5fn2y33c"]
+
+[ext_resource type="Texture2D" uid="uid://dfqfi8cklsfq1" path="res://assets/agent.png" id="1_e4jss"]
+[ext_resource type="Script" uid="uid://dmq5e8mid4p2u" path="res://scripts/entity/agent.gd" id="1_k4koc"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0bhed"]
+
+[node name="Agent" type="CharacterBody2D" unique_id=682734824]
+script = ExtResource("1_k4koc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=894623889]
+shape = SubResource("CircleShape2D_0bhed")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1619795662]
+texture = ExtResource("1_e4jss")
