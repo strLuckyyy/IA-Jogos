@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://d308o2pvho2gt"]
+
+[ext_resource type="Script" uid="uid://bypj1ed5cye8w" path="res://scripts/hud.gd" id="1_6ca3a"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6ca3a"]
+font_size = 35
+
+[sub_resource type="LabelSettings" id="LabelSettings_2gk58"]
+font_color = Color(0.8, 0.5686275, 0, 1)
+
+[node name="Hud" type="Control" unique_id=1885273390]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6ca3a")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1179294962]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=777019419]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control" unique_id=545384547]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/MarginContainer" unique_id=266767289]
+layout_mode = 2
+alignment = 1
+
+[node name="Mode" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer" unique_id=1284146657]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_6ca3a")
+
+[node name="Target" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer" unique_id=314236830]
+layout_mode = 2
+
+[node name="Inputs" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer" unique_id=1537354978]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_2gk58")

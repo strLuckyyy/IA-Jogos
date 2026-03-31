@@ -1,18 +1,52 @@
 [gd_scene format=3 uid="uid://d4ihmodkybipr"]
 
 [ext_resource type="PackedScene" uid="uid://cnc11plwnopkk" path="res://scene/player.tscn" id="1_0bhed"]
-[ext_resource type="Script" uid="uid://cdbrncv7gq4p2" path="res://scripts/game_manager.gd" id="1_m0rpm"]
 [ext_resource type="PackedScene" uid="uid://dnrwy5fn2y33c" path="res://scene/agent.tscn" id="2_m0rpm"]
 [ext_resource type="PackedScene" uid="uid://nj034twkgieb" path="res://scene/agent_spawner.tscn" id="3_m0rpm"]
+[ext_resource type="PackedScene" uid="uid://d308o2pvho2gt" path="res://hud/hud.tscn" id="5_kem5a"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c6xj6"]
+size = Vector2(1906, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6bw2v"]
+size = Vector2(31, 1128)
 
 [node name="Node2D" type="Node2D" unique_id=2043506140]
-script = ExtResource("1_m0rpm")
+
+[node name="Hud" parent="." unique_id=1885273390 instance=ExtResource("5_kem5a")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1357954966]
+zoom = Vector2(0.8, 0.8)
 
-[node name="Player" parent="." unique_id=913969696 instance=ExtResource("1_0bhed")]
+[node name="Player" parent="." unique_id=913969696 groups=["player"] instance=ExtResource("1_0bhed")]
 position = Vector2(-27, 0)
 
 [node name="AgentSpawner" parent="." unique_id=1255350816 instance=ExtResource("3_m0rpm")]
 position = Vector2(-188, -79)
 agent_scene = ExtResource("2_m0rpm")
+
+[node name="scene limits" type="StaticBody2D" parent="." unique_id=578597180]
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="scene limits" unique_id=1276837145]
+position = Vector2(1, -415)
+shape = SubResource("RectangleShape2D_c6xj6")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="scene limits" unique_id=1199311832]
+position = Vector2(-2, 414)
+shape = SubResource("RectangleShape2D_c6xj6")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="scene limits" unique_id=1397802317]
+position = Vector2(-734, -2)
+shape = SubResource("RectangleShape2D_6bw2v")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="scene limits" unique_id=1314465896]
+position = Vector2(734, -13)
+shape = SubResource("RectangleShape2D_6bw2v")

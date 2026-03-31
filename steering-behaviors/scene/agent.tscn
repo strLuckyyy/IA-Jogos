@@ -1,15 +1,30 @@
 [gd_scene format=3 uid="uid://dnrwy5fn2y33c"]
 
-[ext_resource type="Texture2D" uid="uid://dfqfi8cklsfq1" path="res://assets/agent.png" id="1_e4jss"]
+[ext_resource type="Texture2D" uid="uid://dfqfi8cklsfq1" path="res://assets/agent_persuit.png" id="1_e4jss"]
 [ext_resource type="Script" uid="uid://dmq5e8mid4p2u" path="res://scripts/entity/agent.gd" id="1_k4koc"]
+[ext_resource type="Script" uid="uid://c4asy1e68n7l5" path="res://scripts/entity/agent_sprite.gd" id="2_0u22a"]
+[ext_resource type="Texture2D" uid="uid://bg3bpp1skekb" path="res://assets/agent_evasion.png" id="3_bwqhk"]
+[ext_resource type="Texture2D" uid="uid://bno2yv18m08l3" path="res://assets/agent_flee.png" id="4_0u22a"]
+[ext_resource type="Texture2D" uid="uid://1t04riwrefop" path="res://assets/agent_flocking.png" id="5_5xv7h"]
+[ext_resource type="Texture2D" uid="uid://cxtl3nnbp4w0l" path="res://assets/agent_leader_following.png" id="6_sq4ah"]
+[ext_resource type="Texture2D" uid="uid://dpyen8igjwy5q" path="res://assets/agent_seek.png" id="7_1lwv6"]
+[ext_resource type="Texture2D" uid="uid://bkpfxgaojsppc" path="res://assets/agent_wander.png" id="8_63n3f"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0bhed"]
 
-[node name="Agent" type="CharacterBody2D" unique_id=682734824]
+[node name="Agent" type="CharacterBody2D" unique_id=682734824 groups=["agents"]]
+motion_mode = 1
 script = ExtResource("1_k4koc")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=894623889]
 shape = SubResource("CircleShape2D_0bhed")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1619795662]
-texture = ExtResource("1_e4jss")
+script = ExtResource("2_0u22a")
+metadata/seek = ExtResource("7_1lwv6")
+metadata/flee = ExtResource("4_0u22a")
+metadata/persuit = ExtResource("1_e4jss")
+metadata/evasion = ExtResource("3_bwqhk")
+metadata/wander = ExtResource("8_63n3f")
+metadata/flocking = ExtResource("5_5xv7h")
+metadata/leaderfollowing = ExtResource("6_sq4ah")

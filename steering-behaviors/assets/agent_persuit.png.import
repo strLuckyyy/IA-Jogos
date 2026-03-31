@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dfqfi8cklsfq1"
-path="res://.godot/imported/agent.png-5b6d594e3b3bbe0ea75e3739ae97e526.ctex"
+path="res://.godot/imported/agent_persuit.png-b0b297beb937ead3e57441803413cd52.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/agent.png"
-dest_files=["res://.godot/imported/agent.png-5b6d594e3b3bbe0ea75e3739ae97e526.ctex"]
+source_file="res://assets/agent_persuit.png"
+dest_files=["res://.godot/imported/agent_persuit.png-b0b297beb937ead3e57441803413cd52.ctex"]
 
 [params]
 

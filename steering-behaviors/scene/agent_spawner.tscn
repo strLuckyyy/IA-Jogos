@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" uid="uid://dgq8th3hpn4vf" path="res://scripts/entity/agent_spawner.gd" id="1_a3la1"]
 
-[node name="AgentSpawner" type="Node2D" unique_id=1255350816]
+[node name="AgentSpawner" type="Node2D" unique_id=1255350816 groups=["spawner"]]
 script = ExtResource("1_a3la1")
