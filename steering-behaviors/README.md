@@ -1,6 +1,6 @@
 # Projeto - Steering Behaviors
 
-Este projeto tem o objetivo de entender e implementar diferentes tipos de comportamentos envolvendo os trabalhos de Milington sobre Inteligencia Artificial para Jogos
+Este projeto tem o objetivo de entender e implementar diferentes tipos de comportamentos baseados nos estudos de Ian Milington sobre Inteligencia Artificial para Jogos
 
 </br>
 
@@ -8,10 +8,10 @@ Este projeto tem o objetivo de entender e implementar diferentes tipos de compor
 
 **Execução**:
    - Clone o repositório.
-   - Abra o projeto no Godot OU rode o .exe na pasta /exe na raiz do projeto.
+   - Abra o projeto no Godot **OU** rode o `.exe` na pasta /exe na raiz do projeto.
 
 **Controles**:
-   - **AWSD**: Movimenta o Player
+   - **WASD**: Movimenta o Player
    - **Teclas 1 a 7**: Alterna entre os modos de comportamento dos agentes.
    - **Q (Segurar)**: Exibe o menu de ajuda e comandos.
    - **T**: Ativa/Desativa as linhas de Debug (Vetores).
@@ -36,46 +36,57 @@ Abaixo estão os comportamentos baseados na teoria de Craig Reynolds e Ian Milli
 
 ## 📂 Estrutura do Código
 
-O código é gerenciado pelo GameManager, ele lida com definições, modos, inputs e signals. Ao iniciar o programa, ele envia as informações para o Spawner para que possa invocar os Agents.
-Como o GameManager é Singleton, posso chamar suas variáveis e métodos de "longe", o que me permite utilizar esses dados em outras classes sem que elas necessitem referenciar o GameManager em si.
-As classes Steering Behaviors possuem muitas manipulações de valores que envolvem as variáveis presentes no GameManager. Como são diversos Agents em cena essa abordagem facilita a comunicação e coerencia entre eles.
+O código é gerenciado pelo GameManager, responsável por definições, modos, inputs e signals. 
+
+Ao iniciar o programa, o GameManager envia as informações para o Spawner, que instancia os Agents na cena.
+
+Como o GameManager é um Singleton, suas variáveis e métodos podem ser acessados globalmente, permitindo que outras classes utilizem esses dados sem depender de referências diretas.
+
+As classes Steering Behaviors e Agent fazem uso dessas varíaveis globais presentes no GameManager. Como há diversos Agents em cena, essa abordagem facilita a comunicação e mantém a consistência entre os comportamentos.
 
 - **SCRIPT FOLDER**
-* `./scripts/game_manager.gd`: Singleton que gerencia o estado global, inputs e sinais da interface.
-* `./scripts/hud.gd`: Script simples que gerencia a hud.
+* `./scripts/game_manager.gd`: Singleton que gerencia o estado global, inputs e signals.
+* `./scripts/hud.gd`: Gerencia a HUD.
 * `./scripts/utils.gd`: Classe utilitária para factory de comportamentos.
 
 </br>
 
 - **/S/ENTITY FOLDER**
-* `./scripts/entity/agent.gd`: Script principal dos NPCs que possui as informações base dos Agents, roda a lógica do behavior selecionado e interage com alguns signals do GameManager.
-* `./scripts/entity/agent_spawner.gd`: Spawner dinâmico dos Agents na cena. Roda quando o programa é iniciado colocando os Agents em uma posição aleatória dentro de um raio de 50px.
-* `./scripts/entity/agent_sprite.gd`: Script simples que lida com a troca de sprites via Metadata com base no behavior atualmente selecionado.
-* `./scripts/entity/player.gd`: Classe que lida com o movimento do Player.
+* `./scripts/entity/agent.gd`: Classe principal dos NPCs; executa o behavior selecionado e interage com o GameManager.
+* `./scripts/entity/agent_spawner.gd`: Responsável por instânciar Agents em posições aleatória dentro de um raio de 50px.
+* `./scripts/entity/agent_sprite.gd`: Gerencia a troca de sprites via metadata com base no behavior.
+* `./scripts/entity/player.gd`: Lida com o movimento do PLayer.
 
 
 </br>
 
 - **/S/STEERING FOLDER**
-* `./scripts/steering/steering_behavior.gd`: Classe pai de todos os steering behaviors presentes no projeto. Aqui tem a declaração e implementação de variáveis e métodos muito utilizados pelos behaviors.
-* `./scripts/steering/{demais arquivos}`: Cada um lida com um steering behavior separadamente, a lógica de movimento é concentrada no método _calculate_wall(agent: Agent) para que os Agents só precisem chamar pelo método durante a execução.
+* `./scripts/steering/steering_behavior.gd`: Classe base dos steering behaviors; contém variáves e métodos comuns.
+* `./scripts/steering/*`: Cada arquivo implementa um comportamento específico.
+
+A lógica de movimento é concentrada no método _calculate_force(agent: Agent), para que os Agents só precisem chamar pelo método durante a execução.
 
 </br>
 
-## 🛠 Desafios e Soluções
+## Desafios e Soluções
 
-* **Tremor em Obstáculos**:
-    * *Desafio*: Ao utilizar médias de vetores para desviar de paredes, os agentes vibravam intensamente.
-    * *Solução*: Implementação de um sistema de "Antenas" (Raycasts frontais) utilizando a **Normal** da colisão para gerar uma força de repulsão direta e estável.
-* **Atualização da HUD**:
-    * *Desafio*: O texto da ajuda não atualizava ao segurar a tecla.
-    * *Solução*: Implementação de um sistema de Sinais (`signals`) no `GameManager` com `setters` que notificam a interface apenas quando o estado muda.
+Tive dificuldades iniciais para compreender algumas lógicas, principalmente Pursuit, Evasion e Flocking. Como prefiro implementar as coisas de forma mais modular, acabei entrando em um loop de estudo: assistia vídeos, tentava implementar, analisava o resultado, pesquisava como melhorar o código e repetia esse processo.
+
+Também enfrentei problemas extras por escolha de design. Como decidi usar uma câmera fixa, precisei encontrar uma forma de impedir que os Agents saíssem da tela. A solução foi adicionar colisões nos limites da câmera, mas isso acabou gerando outro problema: alguns Agents simplesmente batiam na parede e continuavam tentando se mover “ao infinito”, como se não houvesse obstáculo.
+
+Por conta disso, tive que implementar um sistema de detecção de paredes. Mesmo assim, essa lógica acabou interferindo bastante nos comportamentos, principalmente porque o método calculate_wall influenciava diretamente no movimento dos Agents, deixando alguns deles meio “malucos” dependendo da situação.
+
+Outro ponto que foi mais difícil do que eu esperava foi a linha de debug. Em vários momentos, a direção das linhas não batia com a direção real do movimento dos Agents, o que dificultava bastante o entendimento do que estava acontecendo.
+
+Além disso, comportamentos como Flee e Pursuit apresentaram tremedeiras e bugs bem estranhos. No geral, muitos desses problemas estavam relacionados à combinação das forças de movimento com a lógica de colisão.
+
+No fim, consegui resolver boa parte desses problemas e chegar em um resultado minimamente agradável.
 
 </br>
 
-## 📚 Referências Consultadas
+## Referências Consultadas
 
+* Canais de Youtube como: Martinator, ASamBlur e The Coding Train
 * REYNOLDS, Craig W. **Steering Behaviors For Autonomous Characters**. 1999.
 * MILLINGTON, Ian. **AI for Games**. 2ª Edição, Morgan Kaufmann, 2009.
 * Documentação Oficial Godot Engine (Vector Math & Physics).
-* [Adicione aqui vídeos ou cursos que você assistiu, como Udemy ou tutoriais de Godot]
