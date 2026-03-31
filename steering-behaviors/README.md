@@ -2,6 +2,8 @@
 
 Este projeto tem o objetivo de entender e implementar diferentes tipos de comportamentos baseados nos estudos de Ian Milington sobre Inteligencia Artificial para Jogos
 
+Professora: [Rossana Baptista Queiroz (fellowsheep)](https://github.com/fellowsheep)
+
 </br>
 
 ## Como Utilizar
