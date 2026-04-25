@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://cxtnuqfabifeb"]
+
+[ext_resource type="Script" uid="uid://ghdy3hqhgrse" path="res://Scripts/GridManager.gd" id="1_xkofd"]
+
+[node name="GridManager" type="Node2D" unique_id=1537717183]
+script = ExtResource("1_xkofd")
+rows = 15
+cols = 15
+tile_size = 40
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1446973938]
+
+[node name="Button" type="Button" parent="CanvasLayer" unique_id=1140498649]
+offset_left = 1049.0
+offset_top = 28.0
+offset_right = 1121.0
+offset_bottom = 59.0
+text = "Simular!"
+
+[node name="Button2" type="Button" parent="CanvasLayer" unique_id=792932822]
+offset_left = 1049.0
+offset_top = 61.0
+offset_right = 1121.0
+offset_bottom = 92.0
+text = "BFS"
+
+[node name="Button3" type="Button" parent="CanvasLayer" unique_id=29407293]
+offset_left = 1049.0
+offset_top = 95.0
+offset_right = 1121.0
+offset_bottom = 126.0
+text = "Dijkstra"
+
+[node name="Button4" type="Button" parent="CanvasLayer" unique_id=597179291]
+offset_left = 1049.0
+offset_top = 129.0
+offset_right = 1121.0
+offset_bottom = 160.0
+text = "Greedy"
+
+[node name="Button5" type="Button" parent="CanvasLayer" unique_id=2066129304]
+offset_left = 1049.0
+offset_top = 164.0
+offset_right = 1121.0
+offset_bottom = 195.0
+text = "A*"
+
+[connection signal="pressed" from="CanvasLayer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Button2" to="." method="_on_bfs_pressed"]
+[connection signal="pressed" from="CanvasLayer/Button3" to="." method="_on_dijkstra_pressed"]
+[connection signal="pressed" from="CanvasLayer/Button4" to="." method="_on_greedy_pressed"]
+[connection signal="pressed" from="CanvasLayer/Button5" to="." method="_on_astar_pressed"]
