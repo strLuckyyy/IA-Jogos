@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://dfti50l8eiygj"]
+
+[ext_resource type="Script" uid="uid://7muilp5yoj1u" path="res://scenes/gol/gol.gd" id="1_fb4st"]
+[ext_resource type="AudioStream" uid="uid://bava6522cirpv" path="res://assets/sons/impacto-gol.wav" id="2_01gib"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cq4rg"]
+size = Vector2(20, 729)
+
+[node name="Gol" type="Area2D" unique_id=1612166778]
+script = ExtResource("1_fb4st")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=268968988]
+position = Vector2(0, 360)
+shape = SubResource("RectangleShape2D_cq4rg")
+
+[node name="AudioImpactoGol" type="AudioStreamPlayer2D" parent="." unique_id=480659754]
+unique_name_in_owner = true
+stream = ExtResource("2_01gib")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

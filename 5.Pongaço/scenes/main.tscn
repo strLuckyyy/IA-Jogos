@@ -1,0 +1,117 @@
+[gd_scene format=3 uid="uid://cnl41kbxwvvcu"]
+
+[ext_resource type="Texture2D" uid="uid://dcl6bn47x1vxc" path="res://assets/sprites/campo-roxo.png" id="1_841qh"]
+[ext_resource type="Texture2D" uid="uid://d127teemf15fy" path="res://assets/sprites/jogador.png" id="2_hl7bd"]
+[ext_resource type="PackedScene" uid="uid://gx5mg63d1dt" path="res://scenes/jogador/jogador.tscn" id="3_yjfh4"]
+[ext_resource type="PackedScene" uid="uid://dwmlm77b2xskh" path="res://scenes/bola/bola.tscn" id="4_rkuge"]
+[ext_resource type="PackedScene" uid="uid://dfti50l8eiygj" path="res://scenes/gol/gol.tscn" id="6_41tlp"]
+[ext_resource type="FontFile" uid="uid://ctb1qq3ftvjbb" path="res://assets/fonte/PublicPixel-z84yD.ttf" id="7_0i52l"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_5835s"]
+font = ExtResource("7_0i52l")
+font_size = 50
+
+[sub_resource type="LabelSettings" id="LabelSettings_h8fqp"]
+font = ExtResource("7_0i52l")
+font_size = 50
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g4v7s"]
+size = Vector2(1428, 13)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yf5fn"]
+size = Vector2(20, 745.5)
+
+[node name="Main" type="Node2D" unique_id=1447457515]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer2D" parent="." unique_id=673705577]
+unique_name_in_owner = true
+
+[node name="Campo" type="Sprite2D" parent="." unique_id=1587801473]
+position = Vector2(640, 360)
+texture = ExtResource("1_841qh")
+
+[node name="LinhaDoMeio" type="Sprite2D" parent="." unique_id=1632335816]
+position = Vector2(640, 360)
+scale = Vector2(0.5, 5.6)
+texture = ExtResource("2_hl7bd")
+
+[node name="Jogador1" parent="." unique_id=995128008 instance=ExtResource("3_yjfh4")]
+position = Vector2(64, 360)
+jogador1 = true
+
+[node name="Jogador2" parent="." unique_id=1631707354 instance=ExtResource("3_yjfh4")]
+position = Vector2(1216, 360)
+
+[node name="Bola" parent="." unique_id=1662778644 instance=ExtResource("4_rkuge")]
+position = Vector2(640, 360)
+
+[node name="Gol1" parent="." unique_id=122583902 instance=ExtResource("6_41tlp")]
+position = Vector2(-9, -1)
+
+[node name="Gol2" parent="." unique_id=631946654 instance=ExtResource("6_41tlp")]
+position = Vector2(1288, -3)
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=913173966]
+visible = false
+
+[node name="PainelDePontuacao" type="Control" parent="UI" unique_id=2104121159]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextoPontuacaoJogador1" type="Label" parent="UI/PainelDePontuacao" unique_id=849813321]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -125.0
+offset_top = 10.0
+offset_right = -75.0
+offset_bottom = 63.0
+grow_horizontal = 2
+text = "0"
+label_settings = SubResource("LabelSettings_5835s")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextoPontuacaoJogador2" type="Label" parent="UI/PainelDePontuacao" unique_id=687902940]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 75.0
+offset_top = 10.0
+offset_right = 125.0
+offset_bottom = 63.0
+grow_horizontal = 2
+text = "0"
+label_settings = SubResource("LabelSettings_h8fqp")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=670051170]
+collision_layer = 255
+collision_mask = 255
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1618207487]
+position = Vector2(642, -7.5)
+shape = SubResource("RectangleShape2D_g4v7s")
+debug_color = Color(0.71891874, 0.48098552, 1.92523e-07, 0.41960785)
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D" unique_id=1309933098]
+position = Vector2(640, 725)
+shape = SubResource("RectangleShape2D_g4v7s")
+debug_color = Color(0.71891874, 0.48098552, 1.92523e-07, 0.41960785)
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D" unique_id=426662134]
+position = Vector2(-82, 358.25)
+shape = SubResource("RectangleShape2D_yf5fn")
+debug_color = Color(0.69226307, 0.49721342, 3.85046e-07, 0.41960785)
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D" unique_id=1726385418]
+position = Vector2(1361, 358)
+shape = SubResource("RectangleShape2D_yf5fn")
+debug_color = Color(0.69226307, 0.49721342, 3.85046e-07, 0.41960785)

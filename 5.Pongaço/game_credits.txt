@@ -1,0 +1,3 @@
+Jogo adaptado de:
+	https://youtube.com/playlist?list=PLzjwaizNOg6QrTBD6P82sQQ6GTyag2jIh&si=W1kbLm40B_clh4Sv
+	https://github.com/GabrielChiarelli/curso-pong-na-godot-4-projeto-godot
