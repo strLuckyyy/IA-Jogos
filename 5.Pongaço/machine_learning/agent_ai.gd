@@ -18,13 +18,21 @@ var y_maximo: float = 654
 func _ready() -> void:
 	# Nasce, cria o cérebro vazio e prepara para a rodada
 	brain = NeuralNetwork.new()
-	bola.agent_die.connect(reset)
+	bola.agent_die.connect(die)
 	reset()
+
 
 func reset(fitness_alcancado: float = 0.0) -> void:
 	_set_state(true)
 	position = initial_position
 	fitness = fitness_alcancado
+	
+	# Quando o agente renasce, ele ativa a bola e manda ela recomeçar
+	if bola:
+		bola.show()
+		bola.set_process(true)
+		bola.resetar_bola(true)
+
 
 func _physics_process(delta: float) -> void:
 	# Se estiver morto ou a bola não estiver linkada, não faz nada
@@ -54,9 +62,15 @@ func _physics_process(delta: float) -> void:
 	# Impede que a IA saia da tela
 	position.y = clamp(position.y, y_minimo, y_maximo)
 
-func die() -> void:
-	print("die")
+
+func die(_fitness_alcancado: float = 0.0) -> void:
 	_set_state(false)
+	
+	# Quando o agente morre, ele "desliga" a bola para ela não ficar quicando sozinha
+	if bola:
+		bola.hide()
+		bola.set_process(false)
+
 
 func _set_state(alive: bool) -> void:
 	is_alive = alive

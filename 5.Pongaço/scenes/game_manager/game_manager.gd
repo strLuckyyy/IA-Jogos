@@ -1,18 +1,18 @@
 extends Node2D
 
 var capsula_parede_cena: PackedScene = preload("res://scenes/wall_training.tscn")
-var tamanho_populacao: int = 50
+var tamanho_populacao: int = 10
 var current_generation: int = 1
 
 var capsulas_ativas: Array[Node2D] = []
 var proxima_geracao_cerebros: Array[NeuralNetwork] = []
 
-#func _ready() -> void:
+func _ready() -> void:
 	# Acelera o tempo do jogo para treinar a IA muito mais rápido. 
 	# (Mude para 1.0 se quiser assistir o jogo em velocidade normal)
 	#Engine.time_scale = 3.0 
 	
-	#start_generation()
+	start_generation()
 
 func _process(_delta: float) -> void:
 	check_end_generation()
@@ -33,7 +33,7 @@ func start_generation() -> void:
 		var capsula = capsula_parede_cena.instantiate()
 		
 		# O Segredo da Otimização: Isola a cápsula no eixo Y
-		capsula.position = Vector2(0, i * 2000)
+		capsula.position = Vector2(0, 0)
 		add_child(capsula)
 		capsulas_ativas.append(capsula)
 		
