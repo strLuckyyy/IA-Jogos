@@ -8,5 +8,4 @@ func _on_area_entered(area: Area2D) -> void:
 	var ball = area as Bola
 	
 	impacto_gol.play()
-	ball.resetar_bola()
-	print(ball)
+	ball.resetar_bola(false)

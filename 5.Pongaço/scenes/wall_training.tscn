@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://6uwokht2yplc"]
+
+[ext_resource type="PackedScene" uid="uid://gx5mg63d1dt" path="res://scenes/jogador/jogador.tscn" id="1_thonk"]
+[ext_resource type="PackedScene" uid="uid://dwmlm77b2xskh" path="res://scenes/bola/bola.tscn" id="2_4vxm2"]
+[ext_resource type="Script" uid="uid://bfryg34diqtkb" path="res://machine_learning/agent_ai.gd" id="2_rrosb"]
+[ext_resource type="PackedScene" uid="uid://dfti50l8eiygj" path="res://scenes/gol/gol.tscn" id="3_rrosb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yf5fn"]
+size = Vector2(1403, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d0u6y"]
+size = Vector2(1379, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_thonk"]
+size = Vector2(22, 745)
+
+[node name="WallTraining" type="Node2D" unique_id=1903997208]
+
+[node name="Jogador" parent="." unique_id=537617311 node_paths=PackedStringArray("bola") instance=ExtResource("1_thonk")]
+position = Vector2(64, 360)
+script = ExtResource("2_rrosb")
+bola = NodePath("../Bola")
+
+[node name="Bola" parent="." unique_id=726363117 instance=ExtResource("2_4vxm2")]
+position = Vector2(640, 360)
+
+[node name="Gol" parent="." unique_id=1612166778 instance=ExtResource("3_rrosb")]
+position = Vector2(-9, -1)
+
+[node name="RoofCollision" type="StaticBody2D" parent="." unique_id=223512 groups=["tetos"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoofCollision" unique_id=919273277 groups=["tetos"]]
+position = Vector2(624.5, -11)
+shape = SubResource("RectangleShape2D_yf5fn")
+debug_color = Color(0.6572542, 0.51652133, 0, 0.41960785)
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="RoofCollision" unique_id=1068763061 groups=["tetos"]]
+position = Vector2(643.5, 731)
+shape = SubResource("RectangleShape2D_d0u6y")
+debug_color = Color(0.6572542, 0.51652133, 0, 0.41960785)
+
+[node name="WallCollision" type="StaticBody2D" parent="." unique_id=1197839270 groups=["paredes"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallCollision" unique_id=199997244 groups=["paredes"]]
+position = Vector2(-36, 361)
+shape = SubResource("RectangleShape2D_thonk")
+debug_color = Color(0.7090786, 0.48714173, 7.70092e-07, 0.41960785)
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="WallCollision" unique_id=1082701110 groups=["paredes"]]
+position = Vector2(1320, 363)
+shape = SubResource("RectangleShape2D_thonk")
+debug_color = Color(0.7090786, 0.48714173, 7.70092e-07, 0.41960785)

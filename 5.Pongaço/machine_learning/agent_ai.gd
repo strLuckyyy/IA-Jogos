@@ -1,39 +1,71 @@
-#Este script vai substituir o antigo jogador.gd no projeto que você baixou. Ele ficará na cena da Raquete.
-#
-#O que ele guarda (Variáveis):
-#- cerebro: Uma variável que guarda uma instância da NeuralNetwork.
-#- fitness: A pontuação dessa raquete (quanto tempo ela sobreviveu ou quantos rebotes ela deu).
-#- esta_viva: Um booleano (true/false) para saber se ela já tomou gol ou não.
-#
-#O que ele faz (Funções):
-#- _physics_process(delta): Em vez de ler o teclado, ele pega a posição da bola e da própria raquete, 
-#coloca num Array, e manda para cerebro.predict(entradas). Com a resposta, move a raquete usando a velocity.
-#- morrer(): Função chamada quando a bola passa por ela (gol). Ela muda esta_viva para false, 
-#esconde a raquete (hide()) e avisa o GameManager que foi eliminada.
 class_name AgentAI
 extends StaticBody2D
 
-@onready var initial_global_position = self.global_position
+# Exportamos a variável para você arrastar a Bola direto pelo Inspetor da Godot
+@export var bola: Bola 
 
-var brain:    NeuralNetwork
-var fitness:  float
-var is_alive: bool
+@onready var initial_position = self.position
 
-func reset():
+var brain: NeuralNetwork
+var fitness: float = 0.0
+var is_alive: bool = false
+
+# Variáveis do antigo jogador.gd
+var velocidade_do_jogador: int = 500
+var y_minimo: float = 64
+var y_maximo: float = 654
+
+func _ready() -> void:
+	# Nasce, cria o cérebro vazio e prepara para a rodada
+	brain = NeuralNetwork.new()
+	bola.agent_die.connect(reset)
+	reset()
+
+func reset(fitness_alcancado: float = 0.0) -> void:
 	_set_state(true)
-	global_position = initial_global_position
-
+	position = initial_position
+	fitness = fitness_alcancado
 
 func _physics_process(delta: float) -> void:
-	if not is_alive: return
+	# Se estiver morto ou a bola não estiver linkada, não faz nada
+	if not is_alive or not bola: 
+		return
 
+	# O "Score" da IA: quanto mais tempo ela sobrevive, maior o fitness
+	fitness += delta
 
-func die(): 
+	# 1. O que a IA "enxerga" (Entradas)
+	var entradas: Array[float] = [
+		bola.position.y, 
+		position.y, 
+		float(bola.nova_direcao.x)
+	]
+
+	# 2. A IA pensa e toma uma decisão
+	var decisao = brain.predict(entradas)
+
+	# 3. Executa a ação baseada na decisão
+	if decisao < 0.4:
+		position.y -= velocidade_do_jogador * delta # Sobe
+	elif decisao > 0.6:
+		position.y += velocidade_do_jogador * delta # Desce
+	# Se ficar entre 0.4 e 0.6, fica parado
+
+	# Impede que a IA saia da tela
+	position.y = clamp(position.y, y_minimo, y_maximo)
+
+func die() -> void:
+	print("die")
 	_set_state(false)
-
 
 func _set_state(alive: bool) -> void:
 	is_alive = alive
-	set_deferred("disabled", !alive)
-	if alive: show() 
-	else: hide()
+	
+	# Desativa a caixa de colisão usando o nó filho (CollisionShape2D)
+	if has_node("CollisionShape2D"):
+		$CollisionShape2D.set_deferred("disabled", !alive)
+	
+	if alive: 
+		show() 
+	else: 
+		hide()

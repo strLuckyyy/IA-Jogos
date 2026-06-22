@@ -1,43 +1,117 @@
-#Este script vai no nó principal da cena, gerenciando as 50 raquetes (a População).
-#
-#O que ele guarda (Variáveis):
-#- populacao: Um Array contendo as 50 instâncias da cena AmbienteTreino (cada uma com sua raquete e bola).
-#- geracao_atual: Um contador numérico.
-#- historico_dados: Array ou conexão com arquivo .csv para salvar a evolução do gráfico que o professor pediu.
-#
-#O que ele faz (Funções):
-#- iniciar_geracao(): Spawna os 50 ambientes de treino na tela e despausa o jogo.
-#- checar_fim_de_geracao(): Roda no _process. Verifica o tempo todo se todas as 
-#50 raquetes estão com esta_viva == false ou se o tempo limite acabou. Se sim, chama a próxima função.
-#
-#- evoluir_populacao(): O coração do Algoritmo Genético. O GameManager faz o seguinte:
-#- - Ordena o Array populacao com base no fitness das raquetes (do maior para o menor).
-#- - Pega as top 5 ou 10 melhores raquetes.
-#- - Destrói as piores.
-#- - Usa a função cruzar() e mutar() das melhores para criar 40 ou 45 novos "filhos".
-#- - Reinicia a cena com essa nova frota de 50 ambientes e soma +1 na geracao_atual.
-#
-#Com essa divisão, você garante que as físicas do Pong não se misturem com a matemática da Inteligência Artificial.
 extends Node2D
 
-var population: Array[PackedScene]
-var current_generation: int
-var data_history: Dictionary
+var capsula_parede_cena: PackedScene = preload("res://scenes/wall_training.tscn")
+var tamanho_populacao: int = 50
+var current_generation: int = 1
 
-func start_generation() -> void:
-	pass
+var capsulas_ativas: Array[Node2D] = []
+var proxima_geracao_cerebros: Array[NeuralNetwork] = []
 
-func check_end_generation() -> void:
-	pass
+#func _ready() -> void:
+	# Acelera o tempo do jogo para treinar a IA muito mais rápido. 
+	# (Mude para 1.0 se quiser assistir o jogo em velocidade normal)
+	#Engine.time_scale = 3.0 
+	
+	#start_generation()
 
-func grow_population() -> void:
-	pass
-
-func _process(_delta):
-	# Reinicia a partida
+func _process(_delta: float) -> void:
+	check_end_generation()
+	
+	# Reinicia a partida manualmente
 	if Input.is_action_just_pressed("reiniciar"):
 		get_tree().reload_current_scene()
 	
 	# Sai do jogo
 	if Input.is_action_just_pressed("sair"):
 		get_tree().quit()
+
+func start_generation() -> void:
+	capsulas_ativas.clear()
+	
+	for i in range(tamanho_populacao):
+		# Instancia a cápsula
+		var capsula = capsula_parede_cena.instantiate()
+		
+		# O Segredo da Otimização: Isola a cápsula no eixo Y
+		capsula.position = Vector2(0, i * 2000)
+		add_child(capsula)
+		capsulas_ativas.append(capsula)
+		
+		# IMPORTANTE: Garanta que o nome do nó do Agente na sua cena TreinoParede seja "Jogador"
+		var agente = capsula.get_node("Jogador") 
+		
+		# Se já tivermos passado da Geração 1, injetamos os cérebros evoluídos
+		if proxima_geracao_cerebros.size() > 0:
+			agente.brain = proxima_geracao_cerebros[i]
+			
+		# Chama o reset do agente para ele iniciar a rodada
+		agente.reset()
+
+func check_end_generation() -> void:
+	if capsulas_ativas.is_empty(): 
+		return
+	
+	# Verifica se todos os 50 agentes da geração já morreram
+	var todos_mortos = true
+	for capsula in capsulas_ativas:
+		var agente = capsula.get_node("Jogador")
+		if agente.is_alive:
+			todos_mortos = false
+			break
+			
+	if todos_mortos:
+		evoluir_populacao()
+
+func evoluir_populacao() -> void:
+	# 1. Coletar e ordenar os agentes pelo fitness (do melhor para o pior)
+	var rank: Array[Dictionary] = []
+	for capsula in capsulas_ativas:
+		var agente = capsula.get_node("Jogador")
+		rank.append({"brain": agente.brain, "fitness": agente.fitness})
+		
+	# Função de ordenação
+	rank.sort_custom(func(a, b): return a["fitness"] > b["fitness"])
+	
+	var melhor_fitness = rank[0]["fitness"]
+	print("Geração ", current_generation, " finalizada! Melhor Fitness: ", snapped(melhor_fitness, 0.01))
+	
+	# Salva os dados no CSV para o gráfico da apresentação
+	salvar_historico_csv(current_generation, melhor_fitness)
+	
+	# 2. Elitismo: Salva os 5 melhores cérebros intactos para a próxima geração
+	proxima_geracao_cerebros.clear()
+	for i in range(5):
+		proxima_geracao_cerebros.append(rank[i]["brain"])
+		
+	# 3. Cruzamento e Mutação: Gera os 45 "filhos" restantes
+	for i in range(45):
+		# Torneio simples: Sorteia dois pais aleatórios entre os 10 melhores
+		var pai = rank[randi() % 10]["brain"]
+		var mae = rank[randi() % 10]["brain"]
+		
+		var filho = pai.cross_data(mae)
+		filho.mutate(0.1) # 10% de chance de alterar os pesos neurais
+		
+		proxima_geracao_cerebros.append(filho)
+		
+	# 4. Destrói as cápsulas antigas para liberar memória
+	for capsula in capsulas_ativas:
+		capsula.queue_free()
+		
+	# 5. Prepara a nova geração
+	current_generation += 1
+	
+	# call_deferred manda a Godot esperar o frame atual terminar de deletar os nós antes de criar os novos
+	call_deferred("start_generation")
+
+func salvar_historico_csv(geracao: int, melhor_fitness: float) -> void:
+	# O arquivo será salvo na pasta do usuário (no Windows: %appdata%\Godot\app_userdata\pong-na-godot\)
+	var file
+	if FileAccess.file_exists("user://historico_treino.csv"):
+		file = FileAccess.open("user://historico_treino.csv", FileAccess.READ_WRITE)
+		file.seek_end() # Vai para o final do arquivo para não apagar os antigos
+	else:
+		file = FileAccess.open("user://historico_treino.csv", FileAccess.WRITE)
+		file.store_line("Geracao,Melhor_Fitness") # Cabeçalho na primeira vez
+		
+	file.store_line(str(geracao) + "," + str(snapped(melhor_fitness, 0.01)))
