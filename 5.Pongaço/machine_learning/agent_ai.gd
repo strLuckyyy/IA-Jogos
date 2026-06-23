@@ -15,11 +15,21 @@ var velocidade_do_jogador: int = 500
 var y_minimo: float = 64
 var y_maximo: float = 654
 
+
 func _ready() -> void:
 	# Nasce, cria o cérebro vazio e prepara para a rodada
 	brain = NeuralNetwork.new()
 	bola.agent_die.connect(die)
 	reset()
+
+
+func set_agent(collision: int, color: Color):
+	collision_layer = collision
+	collision_mask  = collision
+	
+	$"../Gol".set_collision(collision)
+	$Sprite2D.set_self_modulate(color)
+	bola.set_agent(collision, color)
 
 
 func reset(fitness_alcancado: float = 0.0) -> void:
@@ -64,6 +74,7 @@ func _physics_process(delta: float) -> void:
 
 
 func die(_fitness_alcancado: float = 0.0) -> void:
+	print(name, " died.")
 	_set_state(false)
 	
 	# Quando o agente morre, ele "desliga" a bola para ela não ficar quicando sozinha

@@ -4,9 +4,11 @@
 [ext_resource type="AudioStream" uid="uid://bava6522cirpv" path="res://assets/sons/impacto-gol.wav" id="2_01gib"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cq4rg"]
-size = Vector2(20, 729)
+size = Vector2(34, 729)
 
 [node name="Gol" type="Area2D" unique_id=1612166778]
+collision_layer = 0
+collision_mask = 0
 script = ExtResource("1_fb4st")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=268968988]

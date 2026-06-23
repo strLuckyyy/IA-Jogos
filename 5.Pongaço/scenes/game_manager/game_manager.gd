@@ -1,7 +1,7 @@
 extends Node2D
 
 var capsula_parede_cena: PackedScene = preload("res://scenes/wall_training.tscn")
-var tamanho_populacao: int = 10
+var tamanho_populacao: int = 30
 var current_generation: int = 1
 
 var capsulas_ativas: Array[Node2D] = []
@@ -38,12 +38,17 @@ func start_generation() -> void:
 		capsulas_ativas.append(capsula)
 		
 		# IMPORTANTE: Garanta que o nome do nó do Agente na sua cena TreinoParede seja "Jogador"
-		var agente = capsula.get_node("Jogador") 
+		var agente = capsula.get_node("Jogador") as AgentAI
 		
 		# Se já tivermos passado da Geração 1, injetamos os cérebros evoluídos
 		if proxima_geracao_cerebros.size() > 0:
 			agente.brain = proxima_geracao_cerebros[i]
-			
+		
+		var r = randf_range(0, 1)
+		var g = randf_range(0, 1)
+		var b = randf_range(0, 1)
+		agente.set_agent(i + 1, Color(r, g, b, 1.0))
+		
 		# Chama o reset do agente para ele iniciar a rodada
 		agente.reset()
 
@@ -84,7 +89,7 @@ func evoluir_populacao() -> void:
 		proxima_geracao_cerebros.append(rank[i]["brain"])
 		
 	# 3. Cruzamento e Mutação: Gera os 45 "filhos" restantes
-	for i in range(45):
+	for i in range(25):
 		# Torneio simples: Sorteia dois pais aleatórios entre os 10 melhores
 		var pai = rank[randi() % 10]["brain"]
 		var mae = rank[randi() % 10]["brain"]

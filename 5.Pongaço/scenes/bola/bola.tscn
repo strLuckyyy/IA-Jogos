@@ -8,6 +8,8 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4b4n6"]
 
 [node name="Bola" type="Area2D" unique_id=726363117]
+collision_layer = 0
+collision_mask = 0
 script = ExtResource("1_0m5t2")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=802433645]

@@ -7,6 +7,8 @@
 size = Vector2(20, 130)
 
 [node name="Jogador" type="StaticBody2D" unique_id=537617311 groups=["jogadores"]]
+collision_layer = 0
+collision_mask = 0
 script = ExtResource("1_w3ll8")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=709808101]

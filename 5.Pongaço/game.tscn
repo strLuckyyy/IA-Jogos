@@ -1,7 +1,21 @@
 [gd_scene format=3 uid="uid://0egxf3uu36yj"]
 
+[ext_resource type="Texture2D" uid="uid://dcl6bn47x1vxc" path="res://assets/sprites/campo-roxo.png" id="1_e2o6t"]
+[ext_resource type="Texture2D" uid="uid://d127teemf15fy" path="res://assets/sprites/jogador.png" id="2_feb5d"]
+
 [node name="Game" type="Node2D" unique_id=1084929647]
+
+[node name="Campo" type="Sprite2D" parent="." unique_id=336185014]
+z_index = -1
+position = Vector2(640, 360)
+texture = ExtResource("1_e2o6t")
+
+[node name="LinhaDoMeio" type="Sprite2D" parent="." unique_id=303053511]
+z_index = -1
+position = Vector2(640, 360)
+scale = Vector2(0.5, 5.6)
+texture = ExtResource("2_feb5d")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1699010249]
 position = Vector2(640, 360)
-zoom = Vector2(0.85, 0.85)
+zoom = Vector2(0.425, 0.425)
