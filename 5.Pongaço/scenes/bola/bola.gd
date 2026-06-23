@@ -83,14 +83,7 @@ func _on_body_entered(body):
 	# Manda a Bola na direção contrária ao colidir com os jogadores
 	if body.is_in_group("jogadores"):
 		nova_direcao.x *= -1
+		if body.has_method("receber_bonus"):
+			body.receber_bonus()
 		#som_impacto_jogador.play()
 		#velocidade_da_bola *= 1.1
-	
-	elif body.is_in_group("paredes"):
-		# Usar -abs() garante que ela SEMPRE vá para a esquerda (negativo)
-		nova_direcao.x = -abs(nova_direcao.x)
-		som_impacto_barreira.play()
-	
-	elif body.is_in_group("tetos"):
-		nova_direcao.y *= -1
-		som_impacto_barreira.play()

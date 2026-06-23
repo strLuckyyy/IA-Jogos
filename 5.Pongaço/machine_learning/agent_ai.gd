@@ -44,6 +44,11 @@ func reset(fitness_alcancado: float = 0.0) -> void:
 		bola.resetar_bola(true)
 
 
+func receber_bonus() -> void:
+	# Dá um bônus gigante na pontuação para incentivar a rebatida
+	fitness += 50.0
+
+
 func _physics_process(delta: float) -> void:
 	# Se estiver morto ou a bola não estiver linkada, não faz nada
 	if not is_alive or not bola: 
@@ -56,7 +61,9 @@ func _physics_process(delta: float) -> void:
 	var entradas: Array[float] = [
 		bola.position.y, 
 		position.y, 
-		float(bola.nova_direcao.x)
+		abs(bola.position.x - position.x),
+		float(bola.nova_direcao.x),
+		float(bola.nova_direcao.y)
 	]
 
 	# 2. A IA pensa e toma uma decisão
@@ -74,7 +81,6 @@ func _physics_process(delta: float) -> void:
 
 
 func die(_fitness_alcancado: float = 0.0) -> void:
-	print(name, " died.")
 	_set_state(false)
 	
 	# Quando o agente morre, ele "desliga" a bola para ela não ficar quicando sozinha
@@ -91,6 +97,6 @@ func _set_state(alive: bool) -> void:
 		$CollisionShape2D.set_deferred("disabled", !alive)
 	
 	if alive: 
-		show() 
-	else: 
-		hide()
+		show()
+		return
+	hide()

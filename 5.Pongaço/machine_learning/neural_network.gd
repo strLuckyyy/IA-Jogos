@@ -10,6 +10,7 @@ func _init() -> void:
 		weights[i] = randf_range(-1.0, 1.0)
 	bias = randf_range(-1.0, 1.0)
 
+
 func predict(entry: Array[float]) -> float:
 	var sum: float = 0.0
 	# Multiplica cada entrada pelo seu peso respectivo
@@ -21,6 +22,7 @@ func predict(entry: Array[float]) -> float:
 	# Função Sigmoide: comprime qualquer resultado para um número entre 0.0 e 1.0
 	return 1.0 / (1.0 + exp(-sum))
 
+
 func mutate(mutation_rate: float) -> void:
 	# Altera levemente os pesos para a IA "tentar coisas novas"
 	for i in range(3):
@@ -29,6 +31,7 @@ func mutate(mutation_rate: float) -> void:
 			
 	if randf() < mutation_rate:
 		bias += randf_range(-0.5, 0.5)
+
 
 func cross_data(other_brain: NeuralNetwork) -> NeuralNetwork:
 	var child = NeuralNetwork.new()
