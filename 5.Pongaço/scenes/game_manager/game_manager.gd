@@ -1,12 +1,21 @@
 extends Node2D
 
+signal brain_debug_data_changed(debug_data_list: Array)
+
+const BrainDebugDataScript := preload("res://machine_learning/brain_debug_data.gd")
+
 var capsula_parede_cena: PackedScene = preload("res://scenes/wall_training.tscn")
 var tamanho_populacao: int = 30
 var current_population: int = self.tamanho_populacao
 var current_generation: int = 1
 
 var capsulas_ativas: Array[Node2D] = []
+var agentes_ativos: Array[AgentAI] = []
 var proxima_geracao_cerebros: Array[NeuralNetwork] = []
+var brain_debug_data_list: Array = []
+var brain_debug_enabled: bool = true
+var print_training_log: bool = true
+var _history_file: FileAccess
 
 
 func _ready() -> void:
@@ -18,6 +27,9 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	check_end_generation()
+	
+	if Input.is_action_just_pressed("debug"):
+		brain_debug_enabled = not brain_debug_enabled
 	
 	if Input.is_action_just_pressed("reiniciar"):
 		get_tree().reload_current_scene()
@@ -34,6 +46,8 @@ func _process(_delta: float) -> void:
 
 func start_generation() -> void:
 	capsulas_ativas.clear()
+	agentes_ativos.clear()
+	brain_debug_data_list.clear()
 	
 	for i in range(tamanho_populacao):
 		var capsula = capsula_parede_cena.instantiate()
@@ -43,6 +57,7 @@ func start_generation() -> void:
 		capsulas_ativas.append(capsula)
 		
 		var agente = capsula.get_node("Jogador") as AgentAI
+		agentes_ativos.append(agente)
 		
 		if proxima_geracao_cerebros.size() > 0:
 			agente.brain = proxima_geracao_cerebros[i]
@@ -50,9 +65,29 @@ func start_generation() -> void:
 		var r = randf_range(0, 1)
 		var g = randf_range(0, 1)
 		var b = randf_range(0, 1)
-		agente.set_agent(1 << i, Color(r, g, b, 1.0))
+		var agent_color := Color(r, g, b, 1.0)
+		agente.set_agent(1 << i, agent_color)
+
+		if brain_debug_enabled:
+			var debug_data := BrainDebugDataScript.new()
+			debug_data.setup(
+				agente,
+				agente.bola,
+				"Agent_%02d" % (i + 1),
+				agent_color,
+				current_generation,
+				i + 1
+			)
+			agente.debug_data = debug_data
+			debug_data.capture_from_refs()
+			brain_debug_data_list.append(debug_data)
+		else:
+			agente.debug_data = null
 		
 		agente.reset()
+
+	if brain_debug_enabled:
+		brain_debug_data_changed.emit(brain_debug_data_list)
 
 
 func check_end_generation() -> void:
@@ -61,8 +96,7 @@ func check_end_generation() -> void:
 	
 	var vivos_neste_frame: int = 0
 	
-	for capsula in capsulas_ativas:
-		var agente = capsula.get_node("Jogador")
+	for agente in agentes_ativos:
 		if agente.is_alive:
 			vivos_neste_frame += 1
 	
@@ -75,15 +109,14 @@ func check_end_generation() -> void:
 func evoluir_populacao() -> void:
 	# Coletar e ordenar os agentes pelo fitness (do melhor para o pior)
 	var rank: Array[Dictionary] = []
-	for capsula in capsulas_ativas:
-		var agente = capsula.get_node("Jogador")
+	for agente in agentes_ativos:
 		rank.append({"brain": agente.brain, "fitness": agente.fitness})
 	
 	rank.sort_custom(func(a, b): return a["fitness"] > b["fitness"])
 	
 	var melhor_fitness = rank[0]["fitness"]
-	print("Geração ", current_generation, " finalizada! Melhor Fitness: ", 
-	snapped(melhor_fitness, 0.01))
+	if print_training_log:
+		print("Geracao ", current_generation, " finalizada! Melhor Fitness: ", snapped(melhor_fitness, 0.01))
 	
 	salvar_historico_csv(current_generation, melhor_fitness)
 	
@@ -99,7 +132,7 @@ func evoluir_populacao() -> void:
 		var mae = rank[randi() % 10]["brain"]
 		
 		var filho = pai.cross_data(mae)
-		filho.mutate(0.1) # 10% de chance de alterar os pesos neurais
+		filho.mutate(0.18) # 18% de chance de alterar os pesos neurais
 		
 		proxima_geracao_cerebros.append(filho)
 	
@@ -112,12 +145,14 @@ func evoluir_populacao() -> void:
 
 
 func salvar_historico_csv(geracao: int, melhor_fitness: float) -> void:
-	var file
-	if FileAccess.file_exists("user://historico_treino.csv"):
-		file = FileAccess.open("user://historico_treino.csv", FileAccess.READ_WRITE)
-		file.seek_end()
-	else:
-		file = FileAccess.open("user://historico_treino.csv", FileAccess.WRITE)
-		file.store_line("Geracao,Melhor_Fitness")
-	
-	file.store_line(str(geracao) + "," + str(snapped(melhor_fitness, 0.01)))
+	if _history_file == null:
+		var history_exists := FileAccess.file_exists("user://historico_treino.csv")
+		_history_file = FileAccess.open("user://historico_treino.csv", FileAccess.READ_WRITE if history_exists else FileAccess.WRITE)
+		if _history_file == null:
+			return
+		if history_exists:
+			_history_file.seek_end()
+		else:
+			_history_file.store_line("Geracao,Melhor_Fitness")
+		
+	_history_file.store_line(str(geracao) + "," + str(snapped(melhor_fitness, 0.01)))

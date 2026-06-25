@@ -5,20 +5,7 @@
 [ext_resource type="Script" uid="uid://bfryg34diqtkb" path="res://machine_learning/agent_ai.gd" id="2_rrosb"]
 [ext_resource type="PackedScene" uid="uid://dfti50l8eiygj" path="res://scenes/gol/gol.tscn" id="3_rrosb"]
 
-[sub_resource type="GDScript" id="GDScript_4vxm2"]
-script/source = "
-extends Node2D
-
-@onready var agent := %Jogador
-@onready var ball  := %Bola
-
-func set_agent(collision: int, color: Color) -> void:
-	agent.set_agent(collision, color)
-	ball. set_agent(collision, color)
-"
-
 [node name="WallTraining" type="Node2D" unique_id=1903997208]
-script = SubResource("GDScript_4vxm2")
 
 [node name="Jogador" parent="." unique_id=537617311 node_paths=PackedStringArray("bola") instance=ExtResource("1_thonk")]
 unique_name_in_owner = true

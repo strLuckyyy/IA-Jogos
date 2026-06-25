@@ -24,8 +24,8 @@ func _ready() -> void:
 	resetar_bola()
 
 
-func _process(delta):
-	movimentar_bola(delta)
+func _physics_process(_delta: float) -> void:
+	movimentar_bola()
 	colidir_com_as_paredes()
 
 
@@ -74,9 +74,9 @@ func escolher_direcao_inicial() -> void:
 	nova_direcao = Vector2(x_aleatorio, y_aleatorio)
 
 
-func movimentar_bola(delta : float) -> void:
+func movimentar_bola() -> void:
 	# Movimenta a Bola
-	position += nova_direcao * velocidade_da_bola * delta
+	position += nova_direcao * velocidade_da_bola * get_physics_process_delta_time()
 
 
 func _on_body_entered(body):
