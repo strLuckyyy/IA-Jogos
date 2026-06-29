@@ -3,3 +3,7 @@
 /android/
 /.vscode
 /pdf
+/exe
+*.exe
+*.zip
+*.pck
