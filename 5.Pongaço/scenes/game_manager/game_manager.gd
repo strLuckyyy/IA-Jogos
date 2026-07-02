@@ -19,8 +19,8 @@ var _history_file: FileAccess
 
 
 func _ready() -> void:
-	# Acelera o tempo do jogo para treinar a IA muito mais rápido. 
-	# (Mude para 1.0 se quiser assistir o jogo em velocidade normal)
+	# acelera o tempo pra treinar mais rápido
+	# (deixa 1.0 se quiser ver o jogo em velocidade normal)
 	#Engine.time_scale = 3.0 
 	start_generation()
 
@@ -110,7 +110,7 @@ func check_end_generation() -> void:
 
 
 func evoluir_populacao() -> void:
-	# Coletar e ordenar os agentes pelo fitness (do melhor para o pior)
+	# ordena os agentes do melhor pro pior fitness
 	var rank: Array[Dictionary] = []
 	for agente in agentes_ativos:
 		rank.append({"brain": agente.brain, "fitness": agente.fitness})
@@ -123,19 +123,19 @@ func evoluir_populacao() -> void:
 	
 	salvar_historico_csv(current_generation, melhor_fitness)
 	
-	# Elitismo: Salva os 5 melhores cérebros intactos para a próxima geração
+	# elitismo: os 5 melhores passam direto pra próxima geração
 	proxima_geracao_cerebros.clear()
 	for i in range(5):
 		proxima_geracao_cerebros.append(rank[i]["brain"])
 		
-	# Cruzamento e Mutação: Gera os 45 "filhos" restantes
+	# o resto (25) nasce de cruzamento + mutação
 	for i in range(25):
-		# Sorteia dois pais aleatórios entre os 10 melhores
+		# sorteia dois pais entre os 10 melhores
 		var pai = rank[randi() % 10]["brain"]
 		var mae = rank[randi() % 10]["brain"]
 		
 		var filho = pai.cross_data(mae)
-		filho.mutate(0.18) # 18% de chance de alterar os pesos neurais
+		filho.mutate(0.18) # 18% de chance de mutar cada peso
 		
 		proxima_geracao_cerebros.append(filho)
 	
