@@ -3,8 +3,8 @@ extends Node2D
 signal brain_debug_data_changed(debug_data_list: Array)
 
 const BrainDebugDataScript := preload("res://machine_learning/brain_debug_data.gd")
+const CapsulaParedeCena: PackedScene = preload("res://scenes/wall_training.tscn")
 
-var capsula_parede_cena: PackedScene = preload("res://scenes/wall_training.tscn")
 var tamanho_populacao: int = 30
 var current_population: int = self.tamanho_populacao
 var current_generation: int = 1
@@ -28,6 +28,9 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	check_end_generation()
 	
+	if Input.is_action_just_pressed("ui_accept"):
+		evoluir_populacao()
+	
 	if Input.is_action_just_pressed("debug"):
 		brain_debug_enabled = not brain_debug_enabled
 	
@@ -50,7 +53,7 @@ func start_generation() -> void:
 	brain_debug_data_list.clear()
 	
 	for i in range(tamanho_populacao):
-		var capsula = capsula_parede_cena.instantiate()
+		var capsula = CapsulaParedeCena.instantiate()
 		
 		capsula.position = Vector2(0, 0)
 		add_child(capsula)
